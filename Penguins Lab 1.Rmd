@@ -51,12 +51,47 @@ penguins2 <- penguins %>%
 
 ```
 
-- Exploratory graphs
-- Summary statistics
-- Levene's tests for equal variances
-- one way ANOVA
-- post-hoc testing
+- Exploratory graphs  
+- Summary statistics  
+- Levene's tests for equal variances  
+- one way ANOVA  
+- post-hoc testing  
 
+```{r}
+
+hists <- ggplot(penguins2, aes(x = flipper_length)) +
+  geom_histogram(aes(fill = common_name)) +
+  facet_wrap(~common_name)
+
+hists
+
+qq <- ggplot(penguins2, aes(sample = flipper_length)) +
+  geom_qq() +
+  facet_wrap(~ common_name)
+
+qq
+
+# Levene's test for equal variance (>2 groups... if you have two groups, use the F-test for equal variance)
+
+# We'll use the function leveneTest from the 'car' package
+
+#H0: Variances are equal
+#HA: Variances are unequal
+
+penguin_levene <- leveneTest(flipper_length ~ common_name, data = penguins2)
+penguin_levene
+
+# We retain the null hypothesis of equal variances (p = 0.06)
+
+# If the highest is less than 4x greater your smallest variance can use an ANOVA. Make a real quick summary table to compare the differences in variances of flipper length by common name. 
+
+variances <- penguins2 %>% 
+  group_by(common_name) %>% 
+  summarize(
+    variance = var(flipper_length)
+  )
+variances
+```
 
 
 
