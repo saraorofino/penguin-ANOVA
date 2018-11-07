@@ -93,5 +93,40 @@ variances <- penguins2 %>%
 variances
 ```
 
+##Step 3.
 
+3. Run One-Way ANOVA    
 
+Single-factor: common_name (species)  
+Number of levels in the factor: 3 (chinstrap, gentoo, adelie)  
+Random variable: flipper_length (mm)  
+
+Is there a significant difference in mean lfipper length (mm) for female chinstrap, gentoo and adelie penguins?  
+
+*Only difference is that using 'car' package will allow you to inline reference results*  
+
+```{r}
+#For an omnibus test: 
+#H0: Mean flipper lengths across all species are equal.
+#HA: At LEAST two means differ significantly 
+
+penguin_aov <- aov(flipper_length ~common_name, data = penguins2)
+summary(penguin_aov) # Use the summary function around the test to get more information on results.
+
+# P-value < 0.001 -> If mean flipper lengths across all species are equal there is almost a 0% chance that we would have gotten the difference in means that we got or greater by random chance. 
+
+# At least two samples were taken from populations with different means. Which ones are different? All three are different from each other? Or something else?
+
+# Post-hoc testing using Tukey's HSD
+# H0: Means are all equal
+# HA: At LEAST two means differ significantly
+
+penguin_ph <- TukeyHSD(penguin_aov)
+penguin_ph
+
+# Mean flipper lengths are all significantly different from each other. 
+```
+
+Mean flipper lengths for Adelie, Gentoo, Chinstrap penguins are all significantly different (F(df) = statistic, p < 0.001, $\alpha$ = 0.05 with post-hoc Tukey's HSD, $\alpha$ = 0.05).
+
+Will need to include ANOVA information and then the post-hoc pairwise test in the results. 
